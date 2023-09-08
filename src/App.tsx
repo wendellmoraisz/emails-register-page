@@ -1,14 +1,12 @@
-import { Box } from "@mui/material"
-import Container from "@mui/material/Container"
+import { ThemeProvider } from "@emotion/react"
+import { muiTheme } from "./muiThemeConfig"
 
 function App() {
 
   return (
-    <Container>
-      <Box component="span" sx={{ p: 2, border: "1px dashed gray"}}>
-        Ola
-      </Box>
-    </Container>
+    <ThemeProvider theme={muiTheme}>
+      ola
+    </ ThemeProvider>
   )
 }
 
