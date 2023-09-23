@@ -1,27 +1,19 @@
 import Email from "../interfaces/Email";
+import HttpResponse from "../Common/HttpResponse";
 
-export const registerEmail = async (email: Email) => {
-  const response = await fetch("/api/register-email", {
+export const registerEmail = async (email: Email): Promise<HttpResponse> => {
+  const response = await fetch("/emails", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ emailAdress: email.address }),
+    body: JSON.stringify({ Address: email.address }),
   });
 
-  const data = await response.json();
-  return data;
+  const responseJson = await response.json();
+
+  return {
+    statusCode: response.status,
+    message: responseJson.message,
+  }
 };
-
-export const verifyIfEmailIsRegistered = async (email: Email) => {
-  const response = await fetch("/api/verify-email", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ emailAdress: email.address }),
-  });
-
-  const data = await response.json();
-  return data;
-}

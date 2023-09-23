@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -7,14 +7,34 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import IFPALogo from "../../assets/ifpa_logo.svg";
+import { registerEmail } from "../../services/email-service";
+import Email from "../../interfaces/Email";
+import { toast } from "react-toastify";
+import updateToastByHttpStatusCode from "../../Common/updateToastByHttpStatusCode";
 
 const RegisterEmail = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const [emailValue, setEmailValue] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const toastId = "email-toast";
+    toast.loading("Estamos cadastrando o seu e-mail...", { toastId });
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email")
-    });
+    const email: Email = {
+      address: data.get("email") as string
+    }
+
+    try {
+      const response = await registerEmail(email);
+      updateToastByHttpStatusCode(toastId, response.statusCode)
+    } catch(e) {
+      updateToastByHttpStatusCode(toastId, 500);
+    }
+
+    setEmailValue("");
   };
 
   return (
@@ -45,6 +65,8 @@ const RegisterEmail = () => {
             type="email"
             name="email"
             autoComplete="email"
+            value={emailValue}
+            onChange={e => setEmailValue(e.target.value)}
             autoFocus
             required
             InputProps={{
