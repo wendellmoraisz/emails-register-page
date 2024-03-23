@@ -8,5 +8,8 @@ export const muiTheme = createTheme({
     secondary: {
       main: "#CE1218",
     }
+  },
+    typography: {
+    fontFamily: "Poppins"
   }
 });
